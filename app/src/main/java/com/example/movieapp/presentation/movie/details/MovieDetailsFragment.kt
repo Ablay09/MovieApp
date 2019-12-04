@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.example.movieapp.R
 import com.example.movieapp.base.BaseFragment
 import com.example.movieapp.utils.AppConstants
 import com.example.movieapp.utils.AppPreferences
+import org.koin.android.ext.android.inject
 
 
-class MovieDetailFragment : BaseFragment() {
+class MovieDetailsFragment : BaseFragment() {
 
-    private lateinit var viewModel: MovieDetailViewModel
+    private val viewModel: MovieDetailsViewModel by inject()
 
     private lateinit var progressBar: ProgressBar
     private lateinit var ivBackdrop: ImageView
@@ -37,7 +37,6 @@ class MovieDetailFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MovieDetailViewModel::class.java)
         bindViews(view)
         setData()
 
@@ -80,13 +79,13 @@ class MovieDetailFragment : BaseFragment() {
 
         viewModel.liveData.observe(viewLifecycleOwner, Observer {result ->
             when(result) {
-                is MovieDetailViewModel.State.ShowLoading -> {
+                is MovieDetailsViewModel.State.ShowLoading -> {
                     progressBar.visibility = View.VISIBLE
                 }
-                is MovieDetailViewModel.State.HideLoading -> {
+                is MovieDetailsViewModel.State.HideLoading -> {
                     progressBar.visibility = View.GONE
                 }
-                is MovieDetailViewModel.State.Result -> {
+                is MovieDetailsViewModel.State.Result -> {
                     val imageUrl = "${AppConstants.BACKDROP_BASE_URL}${result.movie.backdropPath}"
                     Glide.with(this)
                         .load(imageUrl)
@@ -96,17 +95,17 @@ class MovieDetailFragment : BaseFragment() {
                     tvGenre.text = result.movie.genres?.first()?.name
                     tvOverview.text = result.movie.overview
                 }
-                is MovieDetailViewModel.State.FavoriteMovie -> {
+                is MovieDetailsViewModel.State.FavoriteMovie -> {
                     when(result.resultCode) {
                         1 -> Toast.makeText(context, "Successfully added to your favorite movies!", Toast.LENGTH_SHORT).show()
                         12 -> Toast.makeText(context, "The movie was updated successfully", Toast.LENGTH_SHORT).show()
                         13 -> Toast.makeText(context, "The movie was deleted from favorites", Toast.LENGTH_SHORT).show()
                     }
                 }
-                is MovieDetailViewModel.State.Error -> {
+                is MovieDetailsViewModel.State.Error -> {
                     Toast.makeText(context, result.error, Toast.LENGTH_SHORT).show()
                 }
-                is MovieDetailViewModel.State.IntError -> {
+                is MovieDetailsViewModel.State.IntError -> {
                     Toast.makeText(context, result.error, Toast.LENGTH_SHORT).show()
                 }
             }

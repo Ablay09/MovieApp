@@ -1,15 +1,16 @@
 package com.example.movieapp.presentation.movie.cinemas
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
+import com.example.movieapp.base.BaseViewModel
 import com.example.movieapp.data.repository.CinemaRepositoryImpl
 import com.example.movieapp.data.room.Cinema
-import com.example.movieapp.data.room.CinemaRoomDatabase
-import com.example.movieapp.domain.repository.CinemaRepository
+import com.example.movieapp.data.room.CinemaDao
+import com.example.movieapp.exceptions.NoConnectionException
+import com.example.movieapp.repository.CinemaRepository
 
-class CinemaViewModel(application: Application): AndroidViewModel(application) {
+class CinemaViewModel(
+    private val cinemaDao: CinemaDao
+): BaseViewModel() {
 
 
     private val repository: CinemaRepository
@@ -17,8 +18,13 @@ class CinemaViewModel(application: Application): AndroidViewModel(application) {
     var liveData : LiveData<List<Cinema>>
 
     init {
-        val cinemaDao = CinemaRoomDatabase.getDatabase(application, viewModelScope).cinemaDao()
         repository = CinemaRepositoryImpl(cinemaDao)
         liveData = repository.getAllCinemas()
+    }
+
+    override fun handleError(e: Throwable) {
+        if (e is NoConnectionException) {
+            //ToDo
+        }
     }
 }

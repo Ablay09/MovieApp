@@ -1,12 +1,10 @@
 package com.example.movieapp.presentation.movie.cinemas.list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,13 +16,13 @@ import com.example.movieapp.data.room.Cinema
 import com.example.movieapp.presentation.movie.cinemas.CinemaViewModel
 import com.example.movieapp.presentation.movie.cinemas.adapters.CinemaListAdapter
 import com.example.movieapp.utils.AppConstants
+import org.koin.android.ext.android.inject
 
 class CinemaListFragment : BaseFragment() {
 
     private lateinit var navController: NavController
-    private lateinit var listViewModel: CinemaViewModel
+    private val listViewModel: CinemaViewModel by inject()
     private lateinit var rvCinemas: RecyclerView
-    private val TAG = "CinemaTag:"
 
     companion object {
         fun newInstance() : CinemaListFragment =
@@ -39,7 +37,6 @@ class CinemaListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listViewModel = ViewModelProviders.of(this).get(CinemaViewModel::class.java)
         bindViews(view)
         setAdapter()
         setData()
@@ -57,7 +54,6 @@ class CinemaListFragment : BaseFragment() {
                 R.id.action_cinemaFragment_to_cinemaDetailsFragment,
                 bundle
             )
-            Log.d(TAG, bundle.getInt(AppConstants.CINEMA_ID).toString())
         }
     }
     private val cinemaListAdapter by lazy {

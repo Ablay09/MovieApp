@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,11 +17,12 @@ import com.example.movieapp.base.BaseFragment
 import com.example.movieapp.data.models.MovieData
 import com.example.movieapp.utils.AppConstants
 import com.example.movieapp.utils.PaginationListener
+import org.koin.android.ext.android.inject
 
 class MovieListFragment : BaseFragment() {
 
     private lateinit var navController: NavController
-    private lateinit var viewModel: MovieListViewModel
+    private val viewModel: MovieListViewModel by inject()
     private lateinit var rvMovies: RecyclerView
     private lateinit var srlMovies: SwipeRefreshLayout
 
@@ -60,7 +60,6 @@ class MovieListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MovieListViewModel::class.java)
         bindViews(view)
         setAdapter()
         setData()
@@ -129,5 +128,4 @@ class MovieListFragment : BaseFragment() {
     private fun setAdapter() {
         rvMovies.adapter = moviesAdapter
     }
-
 }

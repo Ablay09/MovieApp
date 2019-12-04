@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.movieapp.R
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import org.koin.android.ext.android.inject
 
 
 class CinemaMapFragment : BaseFragment(),
@@ -25,7 +25,7 @@ class CinemaMapFragment : BaseFragment(),
     GoogleMap.OnMarkerClickListener {
 
     private lateinit var map: GoogleMap
-    private lateinit var viewModel: CinemaViewModel
+    private val viewModel: CinemaViewModel by inject()
     private lateinit var navController: NavController
 
     companion object {
@@ -42,7 +42,6 @@ class CinemaMapFragment : BaseFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(CinemaViewModel::class.java)
         bindViews(view)
         setData()
     }

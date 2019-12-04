@@ -3,7 +3,7 @@ package com.example.movieapp.data.repository
 import androidx.lifecycle.LiveData
 import com.example.movieapp.data.room.Cinema
 import com.example.movieapp.data.room.CinemaDao
-import com.example.movieapp.domain.repository.CinemaRepository
+import com.example.movieapp.repository.CinemaRepository
 
 class CinemaRepositoryImpl(private val cinemaDao: CinemaDao) : CinemaRepository {
 

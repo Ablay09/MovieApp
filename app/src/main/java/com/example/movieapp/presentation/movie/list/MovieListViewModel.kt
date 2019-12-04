@@ -4,21 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.movieapp.base.BaseViewModel
 import com.example.movieapp.data.models.MovieData
-import com.example.movieapp.data.repository.MovieRepositoryImpl
-import com.example.movieapp.domain.repository.MovieRepository
+import com.example.movieapp.repository.MovieRepository
 import com.example.movieapp.exceptions.NoConnectionException
 import com.example.movieapp.extensions.launchSafe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MovieListViewModel: BaseViewModel() {
+class MovieListViewModel(
+    private val movieRepository: MovieRepository
+): BaseViewModel() {
 
     private val _liveData = MutableLiveData<State>()
     val liveData: LiveData<State>
         get() = _liveData
-
-    private val movieRepository: MovieRepository = MovieRepositoryImpl()
-
 
     override fun handleError(e: Throwable) {
         _liveData.value =

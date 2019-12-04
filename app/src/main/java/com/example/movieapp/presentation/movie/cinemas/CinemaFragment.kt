@@ -53,5 +53,4 @@ class CinemaFragment : Fragment() {
         viewPager.adapter = adapter
         tabs.setupWithViewPager(viewPager)
     }
-
 }

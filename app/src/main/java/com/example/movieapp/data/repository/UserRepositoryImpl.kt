@@ -1,17 +1,18 @@
 package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.models.AccountData
-import com.example.movieapp.data.network.ApiClient
 import com.example.movieapp.data.network.MovieApi
 import com.example.movieapp.domain.repository.UserRepository
 import com.google.gson.JsonObject
 import retrofit2.Response
 
-class UserRepositoryImpl: UserRepository {
+class UserRepositoryImpl(
+    private val movieApi: MovieApi
+): UserRepository {
     private var requestToken: String? = null
 
     override suspend fun createToken(): Response<JsonObject> {
-        val requestTokenResponse = ApiClient.apiClient.createRequestToken().await()
+        val requestTokenResponse = movieApi.createRequestToken().await()
         requestToken = requestTokenResponse
             .body()
             ?.getAsJsonPrimitive("request_token")
@@ -25,7 +26,7 @@ class UserRepositoryImpl: UserRepository {
             addProperty("password", password)
             addProperty("request_token", requestToken)
         }
-        val loginResponse = ApiClient.apiClient.login(body).await()
+        val loginResponse = movieApi.login(body).await()
         return loginResponse.body()?.getAsJsonPrimitive("success")?.asBoolean ?: false
     }
 
@@ -33,10 +34,10 @@ class UserRepositoryImpl: UserRepository {
         val body = JsonObject().apply {
             addProperty("request_token", requestToken)
         }
-        return ApiClient.apiClient.createSession(body).await()
+        return movieApi.createSession(body).await()
     }
 
     //Account
     override suspend fun getAccountDetails(sessionId: String): AccountData? =
-        ApiClient.apiClient.getAccountId(sessionId).await().body()
+        movieApi.getAccountId(sessionId).await().body()
 }

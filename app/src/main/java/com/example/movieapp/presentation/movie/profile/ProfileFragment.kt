@@ -8,15 +8,15 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 
 import com.example.movieapp.R
 import com.example.movieapp.base.BaseFragment
 import com.example.movieapp.utils.AppPreferences
+import org.koin.android.ext.android.inject
 
 
 class ProfileFragment : BaseFragment() {
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel: ProfileViewModel by inject()
 
     private lateinit var progressBar: ProgressBar
     private lateinit var tvName: TextView
@@ -33,7 +33,6 @@ class ProfileFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         bindViews(view)
         setData()
     }

@@ -10,7 +10,6 @@ import androidx.room.Query
 interface CinemaDao {
 
     //Room will ensure query is executed on background thread for you when return type is LiveData
-
     @Query("SELECT * FROM cinema_table")
     fun getCinemas(): LiveData<List<Cinema>>
 

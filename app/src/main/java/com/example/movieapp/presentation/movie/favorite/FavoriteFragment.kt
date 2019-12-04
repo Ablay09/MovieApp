@@ -1,6 +1,5 @@
 package com.example.movieapp.presentation.movie.favorite
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,10 +20,11 @@ import com.example.movieapp.presentation.movie.list.MovieAdapter
 import com.example.movieapp.utils.AppConstants
 import com.example.movieapp.utils.AppPreferences
 import com.example.movieapp.utils.PaginationListener
+import org.koin.android.ext.android.inject
 
 class FavoriteFragment : BaseFragment() {
+    private val viewModel: FavoriteViewModel by inject()
     private lateinit var navController: NavController
-    private lateinit var viewModel: FavoriteViewModel
     private lateinit var rvFavMovies: RecyclerView
     private lateinit var srlFavMovies: SwipeRefreshLayout
 
@@ -75,7 +74,6 @@ class FavoriteFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(FavoriteViewModel::class.java)
         initId()
         bindViews(view)
         setAdapter()

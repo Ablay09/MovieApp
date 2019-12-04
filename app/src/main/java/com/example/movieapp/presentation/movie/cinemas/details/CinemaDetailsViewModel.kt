@@ -7,10 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.repository.CinemaRepositoryImpl
 import com.example.movieapp.data.room.Cinema
 import com.example.movieapp.data.room.CinemaRoomDatabase
-import com.example.movieapp.domain.repository.CinemaRepository
-import kotlinx.coroutines.Dispatchers
+import com.example.movieapp.repository.CinemaRepository
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CinemaDetailsViewModel(application: Application): AndroidViewModel(application) {
 
