@@ -1,5 +1,7 @@
 package com.example.movieapp.presentation.movie.list
 
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.movieapp.base.BaseViewModel
@@ -7,6 +9,9 @@ import com.example.movieapp.data.models.MovieData
 import com.example.movieapp.repository.MovieRepository
 import com.example.movieapp.exceptions.NoConnectionException
 import com.example.movieapp.extensions.launchSafe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,9 +19,12 @@ class MovieListViewModel(
     private val movieRepository: MovieRepository
 ): BaseViewModel() {
 
-    private val _liveData = MutableLiveData<State>()
     val liveData: LiveData<State>
         get() = _liveData
+
+    private val _liveData = MutableLiveData<State>()
+    private val compositeDisposable = CompositeDisposable()
+
 
     override fun handleError(e: Throwable) {
         _liveData.value =
@@ -33,39 +41,44 @@ class MovieListViewModel(
                 )
         }
     }
-
     init {
         loadMovies()
     }
 
     fun loadMovies(page: Int = 1) {
-        uiScope.launchSafe(::handleError) {
             if (page == 1) {
                 _liveData.value =
                     State.ShowLoading
             }
-            val result = withContext(Dispatchers.IO) {
-                val response = movieRepository.getPopularMovies(page)
-                val list = response?.results ?: emptyList()
-                val totalPages = response?.totalPages ?: 0
-                Pair(totalPages, list)
-            }
-            _liveData.postValue(
-                State.Result(
-                    totalPage = result.first,
-                    list = result.second
-                )
+            compositeDisposable.add(
+                movieRepository.getPopularMovies(page)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ response ->
+                        val list = response.results ?: emptyList()
+                        val totalPages = response.totalPages ?: 0
+                        _liveData.postValue(
+                            State.Result(
+                                totalPages = totalPages,
+                                list = list
+                            )
+                        )
+                    }, { t: Throwable? ->
+                        _liveData.postValue(
+                            State.Error(t?.message)
+                        )
+                    })
             )
             _liveData.value =
                 State.HideLoading
         }
-    }
-
     sealed class State {
         object ShowLoading: State()
         object HideLoading: State()
-        data class Result(val totalPage: Int, val list: List<MovieData>): State()
+        data class Result(val totalPages: Int, val list: List<MovieData>): State()
         data class Error(val error: String?): State()
         data class IntError(val error: Int): State()
     }
+
 }
+

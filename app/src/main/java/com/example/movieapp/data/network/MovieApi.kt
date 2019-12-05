@@ -4,6 +4,7 @@ import com.example.movieapp.data.models.AccountData
 import com.example.movieapp.data.models.MovieData
 import com.example.movieapp.data.models.MovieResponseData
 import com.google.gson.JsonObject
+import io.reactivex.Single
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.*
@@ -29,7 +30,7 @@ interface MovieApi {
 
     // Movie
     @GET("movie/popular")
-    fun getPopularMovies(@Query("page") page: Int) : Deferred<Response<MovieResponseData>>
+    fun getPopularMovies(@Query("page") page: Int) : Single<MovieResponseData>
 
     @GET("account/{account_id}/favorite/movies")
     fun getFavoriteMovies(

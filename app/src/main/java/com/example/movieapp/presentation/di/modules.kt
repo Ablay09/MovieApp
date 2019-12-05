@@ -29,7 +29,9 @@ import org.koin.dsl.module
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.Executors
 
 val networkModule = module {
     single(named("api_key")) { provideApiKey() }
@@ -144,6 +146,8 @@ fun provideRetrofit(
         .client(okHttpClient)
         .addConverterFactory(gsonConverterFactory)
         .addCallAdapterFactory(callAdapterFactory)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .callbackExecutor(Executors.newSingleThreadExecutor())
         .build()
 }
 

@@ -1,6 +1,7 @@
 package com.example.movieapp.presentation.movie.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class MovieListFragment : BaseFragment() {
     private lateinit var rvMovies: RecyclerView
     private lateinit var srlMovies: SwipeRefreshLayout
 
+    private val TAG = "TAG::"
     private var currentPage = PaginationListener.PAGE_START
     private var isLastPage = false
     private var isLoading = false
@@ -108,7 +110,7 @@ class MovieListFragment : BaseFragment() {
                         moviesAdapter.removeLoading()
                     }
                     moviesAdapter.addItems(result.list)
-                    if (currentPage < result.totalPage) {
+                    if (currentPage < result.totalPages) {
                         moviesAdapter.addLoading()
                     } else {
                         isLastPage = true
@@ -116,9 +118,11 @@ class MovieListFragment : BaseFragment() {
                     isLoading = false
                 }
                 is MovieListViewModel.State.Error -> {
+                    Log.d(TAG, result.error)
                     Toast.makeText(context, result.error, Toast.LENGTH_SHORT).show()
                 }
                 is MovieListViewModel.State.IntError -> {
+                    Log.d(TAG, result.error.toString())
                     Toast.makeText(context, result.error, Toast.LENGTH_SHORT).show()
                 }
             }

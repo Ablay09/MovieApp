@@ -5,14 +5,14 @@ import com.example.movieapp.data.models.MovieResponseData
 import com.example.movieapp.data.network.MovieApi
 import com.example.movieapp.repository.MovieRepository
 import com.google.gson.JsonObject
+import io.reactivex.Single
 
 class MovieRepositoryImpl(
     private val movieApi: MovieApi
 ): MovieRepository {
 
-    //Movie
-    override suspend fun getPopularMovies(page: Int) =
-        movieApi.getPopularMovies(page).await().body()
+    override fun getPopularMovies(page: Int): Single<MovieResponseData> =
+        movieApi.getPopularMovies(page)
 
     override suspend fun getFavoriteMovies(
         accountId: Int,
