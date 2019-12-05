@@ -106,16 +106,21 @@ class FavoriteFragment : BaseFragment() {
             currentPage = PaginationListener.PAGE_START
             isLastPage = false
             viewModel.loadFavMovies(accountId, sessionId, page = currentPage)
-            srlFavMovies.isRefreshing = false
         }
     }
 
 
     override fun setData() {
         viewModel.loadFavMovies(accountId, sessionId)
-
+        moviesAdapter.clearAll()
         viewModel.liveData.observe(viewLifecycleOwner, Observer { result ->
             when(result) {
+                is FavoriteViewModel.State.ShowLoading -> {
+                    srlFavMovies.isRefreshing = true
+                }
+                is FavoriteViewModel.State.HideLoading -> {
+                    srlFavMovies.isRefreshing = false
+                }
                 is FavoriteViewModel.State.Result -> {
                     itemCount = result.list.size
                     if (currentPage != PaginationListener.PAGE_START) {
