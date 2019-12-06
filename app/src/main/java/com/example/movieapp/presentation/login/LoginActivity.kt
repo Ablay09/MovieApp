@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
                     progressBar.visibility = View.INVISIBLE
                 }
                 is LoginViewModel.State.ApiResult -> {
-                    if (state.success && state.session_id.isNullOrEmpty()) {
+                    if (state.success && state.session_id.isNotEmpty()) {
                         val intent = Intent(this, MainActivity::class.java)
                         AppPreferences.setAccountId(this, state.account_id)
                         AppPreferences.setSessionId(this, state.session_id)

@@ -49,8 +49,8 @@ class CinemaListFragment : BaseFragment() {
         CinemaListAdapter.ItemClickListener {
         override fun onItemClick(item: Cinema) {
             val bundle = Bundle()
-            item.id?.let {
-                bundle.putInt(AppConstants.CINEMA_ID, item.id)
+            item.id?.let { id ->
+                bundle.putInt(AppConstants.CINEMA_ID, id)
             }
 
             navController.navigate(

@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CinemaDetailsViewModel(application: Application): AndroidViewModel(application) {
+class CinemaDetailsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: CinemaRepository
 
@@ -26,7 +26,7 @@ class CinemaDetailsViewModel(application: Application): AndroidViewModel(applica
     fun getCinema(id: Int) {
         viewModelScope.launch {
             val cinema = repository.getCinema(id)
-            cinema.let { cinema->
+            cinema.let { cinema ->
                 liveData = cinema
             }
         }
