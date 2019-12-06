@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MovieApp</string>
+
+    <string name="movie_list_activity">List</string>
+    <string name="movie_favorite_activity">Favorite</string>
+    <string name="movie_profile_activity">Profile</string>
+
 </resources>
