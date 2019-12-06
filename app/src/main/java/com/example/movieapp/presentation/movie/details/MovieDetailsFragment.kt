@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.constraintlayout.widget.Group
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.movieapp.R
@@ -25,6 +26,7 @@ class MovieDetailsFragment : BaseFragment() {
     private lateinit var tvGenre: TextView
     private lateinit var tvOverview: TextView
     private lateinit var ivFavorite: ImageView
+    private lateinit var group: Group
 
     private var movieId: Int? = 0
     override fun onCreateView(
@@ -68,6 +70,7 @@ class MovieDetailsFragment : BaseFragment() {
         tvGenre = view.findViewById(R.id.tvGenre)
         tvOverview = view.findViewById(R.id.tvOverview)
         ivFavorite = view.findViewById(R.id.ivFavorite)
+        group = view.findViewById(R.id.group)
 
         movieId = arguments?.getInt(AppConstants.MOVIE_ID)
     }
@@ -76,14 +79,15 @@ class MovieDetailsFragment : BaseFragment() {
         movieId?.let { movieId ->
             viewModel.getMovie(movieId)
         }
-
-        viewModel.liveData.observe(viewLifecycleOwner, Observer {result ->
+        viewModel.liveData.observe(viewLifecycleOwner, Observer { result ->
             when(result) {
                 is MovieDetailsViewModel.State.ShowLoading -> {
                     progressBar.visibility = View.VISIBLE
+                    group.visibility = View.GONE
                 }
                 is MovieDetailsViewModel.State.HideLoading -> {
                     progressBar.visibility = View.GONE
+                    group.visibility = View.VISIBLE
                 }
                 is MovieDetailsViewModel.State.Result -> {
                     val imageUrl = "${AppConstants.BACKDROP_BASE_URL}${result.movie.backdropPath}"
@@ -97,7 +101,7 @@ class MovieDetailsFragment : BaseFragment() {
                 }
                 is MovieDetailsViewModel.State.FavoriteMovie -> {
                     when(result.resultCode) {
-                        1 -> Toast.makeText(context, "Successfully added to your favorite movies!", Toast.LENGTH_SHORT).show()
+                        1 ->  Toast.makeText(context, "Successfully added to your favorite movies!", Toast.LENGTH_SHORT).show()
                         12 -> Toast.makeText(context, "The movie was updated successfully", Toast.LENGTH_SHORT).show()
                         13 -> Toast.makeText(context, "The movie was deleted from favorites", Toast.LENGTH_SHORT).show()
                     }

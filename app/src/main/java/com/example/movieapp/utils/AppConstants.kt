@@ -2,7 +2,7 @@ package com.example.movieapp.utils
 
 object AppConstants {
     const val BASE_URL = "https://api.themoviedb.org/3/"
-    const val POSTER_BASE_URL = "http://image.tmdb.org/t/p/w185"
+    const val POSTER_BASE_URL = "http://image.tmdb.org/t/p/w300"
     const val BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780"
     const val API_KEY = "273d56438ffe26425f0f3feb937c058f"
 

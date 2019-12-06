@@ -5,6 +5,8 @@ import com.example.movieapp.data.models.MovieResponseData
 import com.example.movieapp.data.network.MovieApi
 import com.example.movieapp.repository.MovieRepository
 import com.google.gson.JsonObject
+import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 
 class MovieRepositoryImpl(
@@ -14,23 +16,29 @@ class MovieRepositoryImpl(
     override fun getPopularMovies(page: Int): Single<MovieResponseData> =
         movieApi.getPopularMovies(page)
 
-    override suspend fun getFavoriteMovies(
+    override fun getFavoriteMovies(
         accountId: Int,
         sessionId: String,
         page: Int
-    ): MovieResponseData? =
-        movieApi.getFavoriteMovies(accountId, sessionId, page).await().body()
+    ): Single<MovieResponseData> =
+        movieApi.getFavoriteMovies(accountId, sessionId, page)
 
-    override suspend fun getMovieById(movieId: Int): MovieData? =
-        movieApi.getMovie(movieId).await().body()
-
-    override suspend fun rateMovie(movieId: Int, accountId: Int, sessionId: String, favorite: Boolean): Int? {
+    override fun rateMovie(
+        movieId: Int,
+        accountId: Int,
+        sessionId: String,
+        favorite: Boolean
+    ): Observable<Int> {
         val body = JsonObject().apply {
             addProperty("media_type", "movie")
             addProperty("media_id", movieId)
             addProperty("favorite", favorite)
         }
-        val response = movieApi.rateMovie(accountId, sessionId, body).await()
-        return response.body()?.getAsJsonPrimitive("status_code")?.asInt
+        return movieApi.rateMovie(accountId, sessionId, body)
+            .map { response -> response.code }
     }
+
+    override fun getMovieById(movieId: Int): Single<MovieData> =
+        movieApi.getMovie(movieId)
+
 }

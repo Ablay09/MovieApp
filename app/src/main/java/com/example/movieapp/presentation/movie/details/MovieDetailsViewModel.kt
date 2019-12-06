@@ -7,6 +7,9 @@ import com.example.movieapp.data.models.MovieData
 import com.example.movieapp.repository.MovieRepository
 import com.example.movieapp.exceptions.NoConnectionException
 import com.example.movieapp.extensions.launchSafe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,40 +17,44 @@ class MovieDetailsViewModel(
     private val movieRepository: MovieRepository
 ): BaseViewModel() {
 
+    private val compositeDisposable = CompositeDisposable()
     private val _liveData = MutableLiveData<State>()
     val liveData: LiveData<State>
         get() = _liveData
 
     fun getMovie(movieId: Int) {
-        uiScope.launchSafe(::handleError) {
-            _liveData.value =
-                State.ShowLoading
-            withContext(Dispatchers.IO) {
-                val movie = movieRepository.getMovieById(movieId)
-                movie?.let { movieData ->
+        compositeDisposable.add(
+            movieRepository.getMovieById(movieId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ movie ->
+                    _liveData.value = State.HideLoading
                     _liveData.postValue (
-                        State.Result(movieData)
+                        State.Result(movie)
                     )
-                }
-            }
-            _liveData.value =
-                State.HideLoading
-        }
+                }, { throwable ->
+                    _liveData.value =
+                        State.Error(throwable.message)
+                })
+        )
+        _liveData.value =
+            State.ShowLoading
     }
 
     fun setFavorite(accountId: Int, movieId: Int, sessionId: String, favorite: Boolean) {
-        uiScope.launchSafe(::handleError) {
-            withContext(Dispatchers.Default) {
-                val resultCode: Int? = movieRepository.rateMovie(movieId, accountId, sessionId, favorite)
-                resultCode?.let { code ->
+        compositeDisposable.add(
+            movieRepository.rateMovie(movieId, accountId, sessionId, favorite)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ code ->
                     _liveData.postValue(
-                        State.FavoriteMovie(
-                            code
-                        )
+                        State.FavoriteMovie(code)
                     )
-                }
-            }
-        }
+                }, {
+                    _liveData.value =
+                        State.Error(it.message)
+                })
+        )
     }
 
     override fun handleError(e: Throwable) {

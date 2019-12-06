@@ -1,9 +1,11 @@
 package com.example.movieapp.data.network
 
 import com.example.movieapp.data.models.AccountData
+import com.example.movieapp.data.models.FavoriteResponseData
 import com.example.movieapp.data.models.MovieData
 import com.example.movieapp.data.models.MovieResponseData
 import com.google.gson.JsonObject
+import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
@@ -15,17 +17,15 @@ interface MovieApi {
     @POST("authentication/token/validate_with_login")
     fun login(@Body body: JsonObject): Deferred<Response<JsonObject>>
 
-
     @POST("authentication/session/new")
     fun createSession(@Body body: JsonObject) : Deferred<Response<JsonObject>>
 
     @GET("authentication/token/new")
     fun createRequestToken(): Deferred<Response<JsonObject>>
 
-
     // Account
     @GET("account")
-    fun getAccountId(@Query("session_id") sessionId: String): Deferred<Response<AccountData>>
+    fun getAccountId(@Query("session_id") sessionId: String): Observable<AccountData>
 
 
     // Movie
@@ -37,15 +37,15 @@ interface MovieApi {
         @Path("account_id") accountId: Int,
         @Query("session_id") sessionId: String,
         @Query("page") page: Int
-    ) : Deferred<Response<MovieResponseData>>
+    ) : Single<MovieResponseData>
 
     @GET("movie/{movie_id}")
-    fun getMovie(@Path("movie_id") movieId: Int): Deferred<Response<MovieData>>
+    fun getMovie(@Path("movie_id") movieId: Int): Single<MovieData>
 
     @POST("account/{account_id}/favorite")
     fun rateMovie(
         @Path("account_id") accountId: Int,
         @Query("session_id") sessionId: String,
         @Body body: JsonObject
-    ) : Deferred<Response<JsonObject>>
+    ) : Observable<FavoriteResponseData>
 }
