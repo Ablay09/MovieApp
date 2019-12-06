@@ -36,7 +36,7 @@ class FavoriteViewModel : BaseViewModel(){
             val result = withContext(Dispatchers.IO) {
                 val response =
                     accountId?.let { accountId ->
-                        sessionId?.let{ sessionId ->
+                        sessionId?.let { sessionId ->
                             movieRepository.getFavoriteMovies(accountId, sessionId, page)
                         }
                     }

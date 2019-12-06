@@ -53,7 +53,7 @@ class MovieAdapter(
 
     fun addLoading() {
         isLoaderVisible = true
-        movieList.add(MovieData(id=-1))
+        movieList.add(MovieData(id =- 1))
         notifyItemInserted(movieList.size - 1)
     }
 
@@ -105,7 +105,7 @@ class MovieAdapter(
 
         fun bind(movie: MovieData) {
             tvName.text = movie.title
-            movie.releaseDate.let{ date ->
+            movie.releaseDate.let { date ->
                 tvDate.text = date
             }
             val imageUrl = "${AppConstants.BACKDROP_BASE_URL}${movie.backdropPath}"

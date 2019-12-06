@@ -16,7 +16,7 @@ interface MovieApi {
 
 
     @POST("authentication/session/new")
-    fun createSession(@Body body: JsonObject) : Deferred<Response<JsonObject>>
+    fun createSession(@Body body: JsonObject): Deferred<Response<JsonObject>>
 
     @GET("authentication/token/new")
     fun createRequestToken(): Deferred<Response<JsonObject>>

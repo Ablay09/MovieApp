@@ -49,7 +49,7 @@ class CinemaListFragment : BaseFragment() {
         CinemaListAdapter.ItemClickListener {
         override fun onItemClick(item: Cinema) {
             val bundle = Bundle()
-            item.id?.let{
+            item.id?.let {
                 bundle.putInt(AppConstants.CINEMA_ID, item.id)
             }
 

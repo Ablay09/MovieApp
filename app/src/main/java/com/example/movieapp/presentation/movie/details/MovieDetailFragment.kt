@@ -41,19 +41,19 @@ class MovieDetailFragment : BaseFragment() {
         bindViews(view)
         setData()
 
-        val accountId = AppPreferences.getAccountId(activity?.applicationContext!!)
-        val sessionId = AppPreferences.getSessionId(activity?.applicationContext!!)
+        val accountId = activity?.applicationContext?.let { accId -> AppPreferences.getAccountId(accId) }
+        val sessionId = activity?.applicationContext?.let { sessionId -> AppPreferences.getSessionId(sessionId) }
 
         val parentFragment = arguments?.getString(AppConstants.PARENT_FRAGMENT)
 
         ivFavorite.setOnClickListener{
-            movieId?.let {
-                accountId?.let {
-                    sessionId?.let {
+            movieId?.let { movieId ->
+                accountId?.let { accountId ->
+                    sessionId?.let { sessionId ->
                         if (parentFragment.equals("list_fragment")) {
-                            viewModel.setFavorite(accountId, movieId!!, sessionId, true)
+                            viewModel.setFavorite(accountId, movieId, sessionId, true)
                         } else if (parentFragment.equals("favorite_fragment")){
-                            viewModel.setFavorite(accountId, movieId!!, sessionId, false)
+                            viewModel.setFavorite(accountId, movieId, sessionId, false)
                         }
                     }
                 }
