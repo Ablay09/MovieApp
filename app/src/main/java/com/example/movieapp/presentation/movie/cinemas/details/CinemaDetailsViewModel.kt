@@ -24,7 +24,7 @@ class CinemaDetailsViewModel(application: Application): AndroidViewModel(applica
     fun getCinema(id: Int) {
         viewModelScope.launch {
             val cinema = repository.getCinema(id)
-            cinema.let { cinema->
+            cinema.let { cinema ->
                 liveData = cinema
             }
         }

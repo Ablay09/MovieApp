@@ -46,7 +46,7 @@ class ProfileFragment : BaseFragment() {
     }
 
     override fun setData() {
-        val sessionId = AppPreferences.getSessionId(activity?.applicationContext!!)
+        val sessionId = activity?.applicationContext?.let { context -> AppPreferences.getSessionId(context)}
         sessionId?.let {
             viewModel.getAccountDetails(sessionId)
         }

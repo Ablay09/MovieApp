@@ -3,7 +3,6 @@ package com.example.movieapp.presentation.movie.cinemas.adapters
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView

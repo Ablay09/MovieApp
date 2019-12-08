@@ -34,7 +34,7 @@
         tools:layout="@layout/fragment_favorite" >
         <action
             android:id="@+id/action_favoriteFragment_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragment" />
+            app:destination="@+id/movieDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/cinemaFragment"
@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_cinema" >
         <action
             android:id="@+id/action_cinemaFragment_to_cinemaDetailsFragment"
-            app:destination="@id/cinemaDetailsFragment" />
+            app:destination="@+id/cinemaDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/cinemaDetailsFragment"
@@ -57,7 +57,7 @@
         tools:layout="@layout/fragment_cinema_map" >
         <action
             android:id="@+id/action_cinemaMapFragment_to_cinemaDetailsFragment"
-            app:destination="@id/cinemaDetailsFragment" />
+            app:destination="@+id/cinemaDetailsFragment" />
     </fragment>
 
 </navigation>
