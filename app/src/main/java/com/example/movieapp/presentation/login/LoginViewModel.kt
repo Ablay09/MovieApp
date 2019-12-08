@@ -29,14 +29,14 @@ class LoginViewModel(
                 userRepository.createToken()
                 userRepository.login(username, password)
             }
-            val sessionId: String = withContext(Dispatchers.IO) {
-                userRepository.createSession().body()!!.getAsJsonPrimitive("session_id").asString
+            val sessionId: String? = withContext(Dispatchers.IO) {
+                userRepository.createSession().body()?.getAsJsonPrimitive("session_id")?.asString
             }
             val accountId: Int? = withContext(Dispatchers.IO) {
-                userRepository.getAccountDetails(sessionId)?.id
+                sessionId?.let { userRepository.getAccountDetails(it)?.id }
             }
             _liveData.value = State.HideLoading
-            _liveData.postValue(State.ApiResult(result, sessionId, accountId))
+            _liveData.postValue(sessionId?.let { State.ApiResult(result, it, accountId) })
         }
     }
 

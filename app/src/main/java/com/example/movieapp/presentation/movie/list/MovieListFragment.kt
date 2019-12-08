@@ -35,7 +35,7 @@ class MovieListFragment : BaseFragment() {
         MovieAdapter.ItemClickListener {
         override fun onItemClick(item: MovieData) {
             val bundle = Bundle()
-            bundle.putInt(AppConstants.MOVIE_ID, item.id!!)
+            item.id?.let { bundle.putInt(AppConstants.MOVIE_ID, it) }
             bundle.putString(AppConstants.PARENT_FRAGMENT, "list_fragment")
             navController.navigate(
                 R.id.action_moviesListFragment_to_movieDetailsFragment,

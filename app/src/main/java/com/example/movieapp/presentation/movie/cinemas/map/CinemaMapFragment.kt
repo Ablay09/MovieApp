@@ -56,11 +56,17 @@ class CinemaMapFragment : BaseFragment(),
     override fun setData() {
         viewModel.liveData.observe(viewLifecycleOwner, Observer { cinemaList ->
             cinemaList.map { cinema ->
-                val currentLatLng = LatLng(cinema.latitude!!, cinema.longitude!!)
+                val currentLatLng = cinema.latitude?.let { cinema.longitude?.let { it1 ->
+                    LatLng(it,
+                        it1
+                    )
+                } }
                 map.addMarker(
-                    MarkerOptions()
-                        .position(currentLatLng)
-                        .title(cinema.name)
+                    currentLatLng?.let {
+                        MarkerOptions()
+                            .position(it)
+                            .title(cinema.name)
+                    }
                 )
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }

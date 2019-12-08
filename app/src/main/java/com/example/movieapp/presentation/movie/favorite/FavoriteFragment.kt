@@ -61,8 +61,8 @@ class FavoriteFragment : BaseFragment() {
     }
 
     private fun initId() {
-        accountId = AppPreferences.getAccountId(activity?.applicationContext!!)
-        sessionId = AppPreferences.getSessionId(activity?.applicationContext!!)
+        accountId = activity?.applicationContext?.let { AppPreferences.getAccountId(it) }
+        sessionId = activity?.applicationContext?.let { AppPreferences.getSessionId(it) }
     }
 
     override fun onCreateView(

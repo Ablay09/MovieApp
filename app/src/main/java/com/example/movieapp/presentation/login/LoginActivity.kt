@@ -23,16 +23,13 @@ class LoginActivity : AppCompatActivity() {
         buttonLogin.setOnClickListener{
             val username = editTextUsername.text.toString()
             val password = editTextPassword.text.toString()
-            loginViewModel.login(
-                "ablay", "Ablay@98"
-            )
-//            if (username != "" && password != "") {
-//                loginViewModel.login(
-//                    username, password
-//                )
-//            } else {
-//                Toast.makeText(this, "Enter username and password!", Toast.LENGTH_SHORT).show()
-//            }
+            if (username != "" && password != "") {
+                loginViewModel.login(
+                    username, password
+                )
+            } else {
+                Toast.makeText(this, "Enter username and password!", Toast.LENGTH_SHORT).show()
+            }
         }
         setData()
     }
@@ -46,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
                     progressBar.visibility = View.INVISIBLE
                 }
                 is LoginViewModel.State.ApiResult -> {
-                    if (state.success && state.session_id != "") {
+                    if (state.success && state.session_id.isNotEmpty()) {
                         val intent = Intent(this, MainActivity::class.java)
                         AppPreferences.setAccountId(this, state.account_id)
                         AppPreferences.setSessionId(this, state.session_id)

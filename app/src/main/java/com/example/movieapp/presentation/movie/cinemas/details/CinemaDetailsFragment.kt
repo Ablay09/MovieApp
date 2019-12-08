@@ -52,11 +52,10 @@ class CinemaDetailsFragment : BaseFragment() {
         tvContacts = view.findViewById(R.id.tvContacts)
         tvEntry = view.findViewById(R.id.tvEntry)
         tvBuffet = view.findViewById(R.id.tvBuffet)
-
-        cinemaId = arguments?.getInt(AppConstants.CINEMA_ID)
     }
 
     override fun setData() {
+        cinemaId = arguments?.getInt(AppConstants.CINEMA_ID)
         cinemaId?.let { id ->
             viewModel.getCinema(id)
         }
