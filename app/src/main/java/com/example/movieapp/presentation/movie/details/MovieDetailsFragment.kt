@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.lifecycle.Observer
+import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.example.movieapp.R
 import com.example.movieapp.base.BaseFragment
 import com.example.movieapp.utils.AppConstants
 import com.example.movieapp.utils.AppPreferences
 import org.koin.android.ext.android.inject
-
 
 class MovieDetailsFragment : BaseFragment() {
 
@@ -25,6 +25,7 @@ class MovieDetailsFragment : BaseFragment() {
     private lateinit var tvGenre: TextView
     private lateinit var tvOverview: TextView
     private lateinit var ivFavorite: ImageView
+    private lateinit var group: Group
 
     private var movieId: Int? = 0
     override fun onCreateView(
@@ -68,6 +69,7 @@ class MovieDetailsFragment : BaseFragment() {
         tvGenre = view.findViewById(R.id.tvGenre)
         tvOverview = view.findViewById(R.id.tvOverview)
         ivFavorite = view.findViewById(R.id.ivFavorite)
+        group = view.findViewById(R.id.group)
 
         movieId = arguments?.getInt(AppConstants.MOVIE_ID)
     }
@@ -81,9 +83,11 @@ class MovieDetailsFragment : BaseFragment() {
             when(result) {
                 is MovieDetailsViewModel.State.ShowLoading -> {
                     progressBar.visibility = View.VISIBLE
+                    group.visibility = View.GONE
                 }
                 is MovieDetailsViewModel.State.HideLoading -> {
                     progressBar.visibility = View.GONE
+                    group.visibility = View.VISIBLE
                 }
                 is MovieDetailsViewModel.State.Result -> {
                     val imageUrl = "${AppConstants.BACKDROP_BASE_URL}${result.movie.backdropPath}"

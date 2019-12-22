@@ -29,10 +29,14 @@ class FavoriteViewModel(
 
     fun loadFavMovies(accountId: Int?, sessionId: String?, page: Int = 1) {
         uiScope.launchSafe(::handleError) {
+            if (page == 1) {
+                _liveData.value = State.ShowLoading
+            }
+
             val result = withContext(Dispatchers.IO) {
                 val response =
                     accountId?.let { accountId ->
-                        sessionId?.let { sessionId ->
+                        sessionId?.let{ sessionId ->
                             movieRepository.getFavoriteMovies(accountId, sessionId, page)
                         }
                     }
@@ -44,11 +48,14 @@ class FavoriteViewModel(
                 State.Result(
                     totalPages = result.first,
                     list = result.second
-            ))
+                ))
+            _liveData.value = State.HideLoading
         }
     }
 
     sealed class State {
+        object ShowLoading: State()
+        object HideLoading: State()
         data class Result(val totalPages: Int, val list: List<MovieData>): State()
         data class Error(val error: String?): State()
         data class IntError(val error: Int): State()

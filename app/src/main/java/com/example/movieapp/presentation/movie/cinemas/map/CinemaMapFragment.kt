@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.movieapp.R
 import com.example.movieapp.base.BaseFragment
 import com.example.movieapp.presentation.movie.cinemas.CinemaViewModel
+import com.example.movieapp.utils.AppConstants
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -62,10 +64,12 @@ class CinemaMapFragment : BaseFragment(),
                     )
                 } }
                 map.addMarker(
-                    currentLatLng?.let {
-                        MarkerOptions()
-                            .position(it)
-                            .title(cinema.name)
+                    currentLatLng?.let {latLng ->
+                        cinema.id?.let { id ->
+                            MarkerOptions()
+                                .position(latLng)
+                                .title(cinema.name)
+                        }
                     }
                 )
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
@@ -79,5 +83,7 @@ class CinemaMapFragment : BaseFragment(),
         map.setOnMarkerClickListener(this)
     }
 
-    override fun onMarkerClick(marker: Marker?): Boolean  = false
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        return false
+    }
 }

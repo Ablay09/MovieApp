@@ -94,6 +94,7 @@ class MovieListFragment : BaseFragment() {
     }
 
     override fun setData() {
+        moviesAdapter.clearAll()
         viewModel.liveData.observe(viewLifecycleOwner, Observer { result ->
             when(result) {
                 is MovieListViewModel.State.ShowLoading -> {

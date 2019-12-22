@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
-                android:hint="Name"
                 android:textColor="@android:color/white"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
         </LinearLayout>
@@ -72,7 +71,6 @@
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
                 android:maxLines="2"
-                android:hint="Username"
                 android:textColor="@android:color/white"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
@@ -97,7 +95,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
-                android:hint="true/false"
                 android:textColor="@android:color/white"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
         </LinearLayout>

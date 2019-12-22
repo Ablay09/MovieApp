@@ -5,4 +5,7 @@
     <string name="movie_favorite_activity">Favorite</string>
     <string name="movie_profile_activity">Profile</string>
 
+
+    <string name="notification_channel_id" translatable="false">Movie App</string>
+    <string name="notification_title">Movie app</string>
 </resources>
