@@ -108,7 +108,7 @@ class MovieAdapter(
             movie.releaseDate.let { date ->
                 tvDate.text = date
             }
-            val imageUrl = "${AppConstants.BACKDROP_BASE_URL}${movie.backdropPath}"
+            val imageUrl = "${AppConstants.POSTER_BASE_URL}${movie.posterPath}"
 
             Glide.with(itemView.context)
                 .load(imageUrl)

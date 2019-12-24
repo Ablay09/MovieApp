@@ -22,6 +22,8 @@ class CinemaViewModel(
         liveData = repository.getAllCinemas()
     }
 
+
+
     override fun handleError(e: Throwable) {
         if (e is NoConnectionException) {
             //ToDo

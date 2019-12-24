@@ -30,7 +30,7 @@
             android:textColor="@android:color/white"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/tvRating"
+            app:layout_constraintEnd_toStartOf="@+id/btnFavorite"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
             tools:text="Name" />
@@ -59,16 +59,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
-        <ImageView
-            android:id="@+id/ivFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icons_heart"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="@+id/tvGenre"
-            app:layout_constraintEnd_toEndOf="@+id/tvGenre"
-            app:layout_constraintTop_toBottomOf="@+id/tvGenre"
-            app:layout_constraintHorizontal_bias="0.0" />
+        <Button
+            android:id="@+id/btnFavorite"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:background="@drawable/unlike"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/tvRating"
+            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop" />
 
         <TextView
             android:id="@+id/tvOverview"
@@ -79,14 +78,14 @@
             android:textColor="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivFavorite"
+            app:layout_constraintTop_toBottomOf="@+id/tvGenre"
             tools:text="Overview"/>
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="ivBackdrop,tvName,tvRating,tvGenre,ivFavorite" />
+            app:constraint_referenced_ids="ivBackdrop,tvName,tvRating,tvGenre,btnFavorite" />
 
         <ProgressBar
             android:id="@+id/progressBar"

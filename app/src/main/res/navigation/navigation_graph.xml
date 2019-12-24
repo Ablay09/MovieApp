@@ -43,7 +43,7 @@
         tools:layout="@layout/fragment_cinema" >
         <action
             android:id="@+id/action_cinemaFragment_to_cinemaDetailsFragment"
-            app:destination="@+id/cinemaDetailsFragment" />
+            app:destination="@id/cinemaDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/cinemaDetailsFragment"

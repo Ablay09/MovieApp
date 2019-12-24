@@ -1,6 +1,7 @@
 package com.example.movieapp.presentation.movie.cinemas.map
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,13 +63,15 @@ class CinemaMapFragment : BaseFragment(),
                     LatLng(it,
                         it1
                     )
-                } }
+                    }
+                }
                 map.addMarker(
-                    currentLatLng?.let {latLng ->
+                    currentLatLng?.let { latLng ->
                         cinema.id?.let { id ->
                             MarkerOptions()
                                 .position(latLng)
                                 .title(cinema.name)
+                                .zIndex(id.toFloat())
                         }
                     }
                 )
@@ -84,6 +87,16 @@ class CinemaMapFragment : BaseFragment(),
     }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
+        val bundle = Bundle()
+        marker?.zIndex?.toInt()?.let { id ->
+            bundle.putInt(AppConstants.CINEMA_ID, id)
+        }
+        Log.d("CinemaId:", bundle.getInt(AppConstants.CINEMA_ID).toString())
+
+        navController.navigate(
+            R.id.action_cinemaFragment_to_cinemaDetailsFragment,
+            bundle
+        )
         return false
     }
 }

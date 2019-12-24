@@ -2,16 +2,21 @@ package com.example.movieapp.repository
 
 import com.example.movieapp.data.models.MovieData
 import com.example.movieapp.data.models.MovieResponseData
+import io.reactivex.Observable
+import io.reactivex.Single
 
 interface MovieRepository {
 
     // Movie
-    suspend fun getPopularMovies(page: Int) : MovieResponseData?
+    fun getPopularMovies(page: Int): Single<MovieResponseData>
 
-    suspend fun getMovieById(movieId: Int): MovieData?
+    fun getTopRatedMovies(page: Int): Single<MovieResponseData>
 
-    suspend fun getFavoriteMovies(accountId: Int, sessionId: String, page: Int): MovieResponseData?
+    fun getUpcomingMovies(page: Int): Single<MovieResponseData>
 
-    suspend fun rateMovie(movieId: Int, accountId: Int, sessionId: String, favorite:Boolean): Int?
+    fun getMovieById(movieId: Int): Single<MovieData>
 
+    fun getFavoriteMovies(sessionId: String, page: Int): Single<MovieResponseData>
+
+    fun favMovie(movieId: Int, accountId: Int, sessionId: String, favorite:Boolean): Observable<Int>
 }

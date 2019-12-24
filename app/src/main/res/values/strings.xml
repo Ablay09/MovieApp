@@ -8,4 +8,11 @@
 
     <string name="notification_channel_id" translatable="false">Movie App</string>
     <string name="notification_title">Movie app</string>
+
+    <string-array name="get_movies">
+        <item>Popular</item>
+        <item>Top rated</item>
+        <item>Upcoming</item>
+    </string-array>
+    <string name="prompt">Select movies</string>
 </resources>

@@ -4,6 +4,7 @@ import com.example.movieapp.data.models.AccountData
 import com.example.movieapp.data.network.MovieApi
 import com.example.movieapp.domain.repository.UserRepository
 import com.google.gson.JsonObject
+import io.reactivex.Observable
 import retrofit2.Response
 
 class UserRepositoryImpl(
@@ -37,7 +38,7 @@ class UserRepositoryImpl(
         return movieApi.createSession(body).await()
     }
 
-    //Account
-    override suspend fun getAccountDetails(sessionId: String): AccountData? =
-        movieApi.getAccountId(sessionId).await().body()
+
+    override fun getAccountDetails(sessionId: String): Observable<AccountData> =
+        movieApi.getAccountDetails(sessionId)
 }

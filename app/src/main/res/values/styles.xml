@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="spinnerDropDownItemStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@color/themeColor</item>
+    </style>
 </resources>

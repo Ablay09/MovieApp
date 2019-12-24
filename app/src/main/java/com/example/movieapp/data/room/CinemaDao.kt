@@ -21,4 +21,17 @@ interface CinemaDao {
 
     @Query("SELECT * FROM cinema_table WHERE id=:id")
     fun getCinema(id: Int): LiveData<Cinema>
+
+
+
+    // Movie
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertMovie(movieEntity: MovieEntity)
+
+    @Query("SELECT * FROM favorite_movies_table WHERE movie_id = :movieId")
+    fun checkIfMovieIsFavorite(movieId: Int): Boolean
+
+    @Query("DELETE FROM favorite_movies_table WHERE movie_id = :movieId")
+    fun deleteFromFavorites(movieId: Int)
 }
+

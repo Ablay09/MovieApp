@@ -33,7 +33,6 @@ class FavoriteFragment : BaseFragment() {
     private var isLoading = false
     private var itemCount = 0
 
-    private var accountId: Int? = null
     private var sessionId: String? = null
 
 
@@ -49,7 +48,6 @@ class FavoriteFragment : BaseFragment() {
         }
     }
 
-
     private val moviesAdapter by lazy {
         MovieAdapter(
             itemClickListener = onClickListener
@@ -61,7 +59,6 @@ class FavoriteFragment : BaseFragment() {
     }
 
     private fun initId() {
-        accountId = activity?.applicationContext?.let { AppPreferences.getAccountId(it) }
         sessionId = activity?.applicationContext?.let { AppPreferences.getSessionId(it) }
     }
 
@@ -91,7 +88,7 @@ class FavoriteFragment : BaseFragment() {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage++
-                viewModel.loadFavMovies(accountId, sessionId, page = currentPage)
+                viewModel.loadFavMovies( sessionId, page = currentPage)
             }
 
             override fun isLastPage(): Boolean = isLastPage
@@ -103,12 +100,12 @@ class FavoriteFragment : BaseFragment() {
             itemCount = 0
             currentPage = PaginationListener.PAGE_START
             isLastPage = false
-            viewModel.loadFavMovies(accountId, sessionId, page = currentPage)
+            viewModel.loadFavMovies(sessionId, page = currentPage)
         }
     }
 
     override fun setData() {
-        viewModel.loadFavMovies(accountId, sessionId)
+        viewModel.loadFavMovies(sessionId)
         moviesAdapter.clearAll()
         viewModel.liveData.observe(viewLifecycleOwner, Observer { result ->
             when(result) {
@@ -124,7 +121,14 @@ class FavoriteFragment : BaseFragment() {
                     if (currentPage != PaginationListener.PAGE_START) {
                         moviesAdapter.removeLoading()
                     }
-                    moviesAdapter.addItems(result.list)
+
+                    if (result.list.isNotEmpty()) {
+                        moviesAdapter.addItems(result.list)
+                    } else {
+                        
+                        Toast.makeText(context, "You have no favorite movies", Toast.LENGTH_SHORT).show()
+                    }
+
                     if (currentPage < result.totalPages) {
                         moviesAdapter.addLoading()
                     } else {

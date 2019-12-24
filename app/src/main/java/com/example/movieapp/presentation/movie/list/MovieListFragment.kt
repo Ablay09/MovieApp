@@ -1,17 +1,17 @@
 package com.example.movieapp.presentation.movie.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
 import com.example.movieapp.R
 import com.example.movieapp.base.BaseFragment
 import com.example.movieapp.data.models.MovieData
@@ -19,17 +19,21 @@ import com.example.movieapp.utils.AppConstants
 import com.example.movieapp.utils.PaginationListener
 import org.koin.android.ext.android.inject
 
+
 class MovieListFragment : BaseFragment() {
 
     private lateinit var navController: NavController
     private val viewModel: MovieListViewModel by inject()
     private lateinit var rvMovies: RecyclerView
     private lateinit var srlMovies: SwipeRefreshLayout
+    private lateinit var spinner: Spinner
 
     private var currentPage = PaginationListener.PAGE_START
     private var isLastPage = false
     private var isLoading = false
     private var itemCount = 0
+
+    private var state: String = ""
 
     private val onClickListener = object:
         MovieAdapter.ItemClickListener {
@@ -61,6 +65,43 @@ class MovieListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViews(view)
+
+        val moviesArr: Array<String> = resources.getStringArray(R.array.get_movies)
+        val adapter = context?.let {
+            ArrayAdapter<String>(it, R.layout.spinner_item, moviesArr)
+        }
+        adapter?.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when (moviesArr[position]) {
+                    "Top rated" -> {
+                        state = "topRated"
+                        moviesAdapter.clearAll()
+                        viewModel.getTopRatedMovies()
+                    }
+                    "Popular" -> {
+                        state = "popular"
+                        moviesAdapter.clearAll()
+                        viewModel.getPopularMovies()
+                    }
+                    "Upcoming" -> {
+                        state = "upcoming"
+                        moviesAdapter.clearAll()
+                        viewModel.getUpcomingMovies()
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
         setAdapter()
         setData()
     }
@@ -69,6 +110,7 @@ class MovieListFragment : BaseFragment() {
         navController = Navigation.findNavController(this)
         srlMovies = findViewById(R.id.srlMovies)
         rvMovies = findViewById(R.id.rvMovies)
+        spinner = findViewById(R.id.spinner)
         val layoutManager = LinearLayoutManager(context)
         rvMovies.layoutManager = layoutManager
         rvMovies.addOnScrollListener(object: PaginationListener(layoutManager) {
@@ -76,7 +118,7 @@ class MovieListFragment : BaseFragment() {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage++
-                viewModel.loadMovies(page = currentPage)
+                viewModel.getPopularMovies(page = currentPage)
             }
 
             override fun isLastPage(): Boolean = isLastPage
@@ -89,7 +131,12 @@ class MovieListFragment : BaseFragment() {
             itemCount = 0
             currentPage = PaginationListener.PAGE_START
             isLastPage = false
-            viewModel.loadMovies(page = currentPage)
+            when (state) {
+                "topRated" -> viewModel.getTopRatedMovies(page = currentPage)
+                "popular" -> viewModel.getPopularMovies(page = currentPage)
+                "upcoming" -> viewModel.getUpcomingMovies(page = currentPage)
+            }
+
         }
     }
 
@@ -109,7 +156,7 @@ class MovieListFragment : BaseFragment() {
                         moviesAdapter.removeLoading()
                     }
                     moviesAdapter.addItems(result.list)
-                    if (currentPage < result.totalPage) {
+                    if (currentPage < result.totalPages) {
                         moviesAdapter.addLoading()
                     } else {
                         isLastPage = true

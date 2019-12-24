@@ -24,7 +24,7 @@ class MovieDetailsFragment : BaseFragment() {
     private lateinit var tvRating: TextView
     private lateinit var tvGenre: TextView
     private lateinit var tvOverview: TextView
-    private lateinit var ivFavorite: ImageView
+    private lateinit var btnFavorite: Button
     private lateinit var group: Group
 
     private var movieId: Int? = 0
@@ -46,14 +46,16 @@ class MovieDetailsFragment : BaseFragment() {
 
         val parentFragment = arguments?.getString(AppConstants.PARENT_FRAGMENT)
 
-        ivFavorite.setOnClickListener{
+        btnFavorite.setOnClickListener{
             movieId?.let { movieId ->
                 accountId?.let { accountId ->
                     sessionId?.let { sessionId ->
                         if (parentFragment.equals("list_fragment")) {
-                            viewModel.setFavorite(accountId, movieId!!, sessionId, true)
-                        } else if (parentFragment.equals("favorite_fragment")){
-                            viewModel.setFavorite(accountId, movieId!!, sessionId, false)
+                            viewModel.setFavorite(accountId, movieId, sessionId, true)
+                            viewModel.addToFavorites(movieId)
+                        } else if (parentFragment.equals("favorite_fragment")) {
+                            viewModel.setFavorite(accountId, movieId, sessionId, false)
+                            viewModel.deleteFromFavorites(movieId)
                         }
                     }
                 }
@@ -68,16 +70,17 @@ class MovieDetailsFragment : BaseFragment() {
         tvRating = view.findViewById(R.id.tvRating)
         tvGenre = view.findViewById(R.id.tvGenre)
         tvOverview = view.findViewById(R.id.tvOverview)
-        ivFavorite = view.findViewById(R.id.ivFavorite)
+        btnFavorite = view.findViewById(R.id.btnFavorite)
         group = view.findViewById(R.id.group)
-
-        movieId = arguments?.getInt(AppConstants.MOVIE_ID)
     }
 
     override fun setData() {
+        movieId = arguments?.getInt(AppConstants.MOVIE_ID)
         movieId?.let { movieId ->
             viewModel.getMovie(movieId)
+            viewModel.checkIfFavorite(movieId)
         }
+
 
         viewModel.liveData.observe(viewLifecycleOwner, Observer {result ->
             when(result) {
@@ -101,9 +104,24 @@ class MovieDetailsFragment : BaseFragment() {
                 }
                 is MovieDetailsViewModel.State.FavoriteMovie -> {
                     when(result.resultCode) {
-                        1 -> Toast.makeText(context, "Successfully added to your favorite movies!", Toast.LENGTH_SHORT).show()
-                        12 -> Toast.makeText(context, "The movie was updated successfully", Toast.LENGTH_SHORT).show()
-                        13 -> Toast.makeText(context, "The movie was deleted from favorites", Toast.LENGTH_SHORT).show()
+                        1 -> {
+                            btnFavorite.setBackgroundResource(R.drawable.like)
+                            Toast.makeText(context, "Successfully added to your favorite movies!", Toast.LENGTH_SHORT).show()
+                        }
+                        12 -> {
+                            Toast.makeText(context, "The movie was updated successfully", Toast.LENGTH_SHORT).show()
+                        }
+                        13 -> {
+                            btnFavorite.setBackgroundResource(R.drawable.unlike)
+                            Toast.makeText(context, "The movie was deleted from favorites", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                is MovieDetailsViewModel.State.IsFavorite -> {
+                    if(result.favorite) {
+                        btnFavorite.setBackgroundResource(R.drawable.like)
+                    } else {
+                        btnFavorite.setBackgroundResource(R.drawable.unlike)
                     }
                 }
                 is MovieDetailsViewModel.State.Error -> {

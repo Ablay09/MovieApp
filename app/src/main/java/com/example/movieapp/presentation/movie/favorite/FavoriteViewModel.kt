@@ -7,6 +7,9 @@ import com.example.movieapp.data.models.MovieData
 import com.example.movieapp.repository.MovieRepository
 import com.example.movieapp.exceptions.NoConnectionException
 import com.example.movieapp.extensions.launchSafe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,6 +17,7 @@ class FavoriteViewModel(
     private val movieRepository: MovieRepository
 ): BaseViewModel(){
 
+    private val compositeDisposable = CompositeDisposable()
     private val _liveData = MutableLiveData<State>()
     val liveData: LiveData<State>
         get() = _liveData
@@ -27,30 +31,30 @@ class FavoriteViewModel(
     }
 
 
-    fun loadFavMovies(accountId: Int?, sessionId: String?, page: Int = 1) {
-        uiScope.launchSafe(::handleError) {
-            if (page == 1) {
-                _liveData.value = State.ShowLoading
-            }
-
-            val result = withContext(Dispatchers.IO) {
-                val response =
-                    accountId?.let { accountId ->
-                        sessionId?.let{ sessionId ->
-                            movieRepository.getFavoriteMovies(accountId, sessionId, page)
-                        }
-                    }
-                val list = response?.results ?: emptyList()
-                val totalPages = response?.totalPages ?: 0
-                Pair(totalPages, list)
-            }
-            _liveData.postValue(
-                State.Result(
-                    totalPages = result.first,
-                    list = result.second
-                ))
-            _liveData.value = State.HideLoading
+    fun loadFavMovies(sessionId: String?, page: Int = 1) {
+        if (page == 1) {
+            _liveData.value = State.ShowLoading
         }
+        sessionId?.let {
+            compositeDisposable.addAll(
+                movieRepository.getFavoriteMovies(it, page)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ response ->
+                        val list = response.results ?: emptyList()
+                        val totalPages = response.totalPages ?: 0
+                        _liveData.postValue(
+                            State.Result(
+                                totalPages = totalPages,
+                                list = list
+                            )
+                        )
+                    }, { t ->
+                        _liveData.value = State.Error(t.message)
+                    })
+            )
+        }
+        _liveData.value = State.HideLoading
     }
 
     sealed class State {

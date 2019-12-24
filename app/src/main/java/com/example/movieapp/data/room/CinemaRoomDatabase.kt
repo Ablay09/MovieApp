@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-@Database(entities = [Cinema::class], version = 2, exportSchema = false)
+@Database(entities = [Cinema::class, MovieEntity::class], version = 3, exportSchema = false)
 abstract class CinemaRoomDatabase: RoomDatabase() {
     abstract fun cinemaDao(): CinemaDao
 

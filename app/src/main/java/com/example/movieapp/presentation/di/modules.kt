@@ -29,6 +29,7 @@ import org.koin.dsl.module
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 val networkModule = module {
@@ -73,10 +74,11 @@ val roomModule = module {
 val viewModelModule = module {
     viewModel { LoginViewModel(userRepository = get()) }
     viewModel { MovieListViewModel(movieRepository = get()) }
-    viewModel { MovieDetailsViewModel(movieRepository = get()) }
+    viewModel { MovieDetailsViewModel(movieRepository = get(), cinemaDao = get()) }
     viewModel { FavoriteViewModel(movieRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }
     viewModel { CinemaViewModel(cinemaDao = get()) }
+
 }
 
 val appModule = listOf(networkModule, repositoryModule, viewModelModule, roomModule)
@@ -144,9 +146,8 @@ fun provideRetrofit(
         .client(okHttpClient)
         .addConverterFactory(gsonConverterFactory)
         .addCallAdapterFactory(callAdapterFactory)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 }
 
 fun provideMovieApi(retrofit: Retrofit): MovieApi = retrofit.create(MovieApi::class.java)
-
-
